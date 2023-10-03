@@ -1,4 +1,4 @@
-# Optimize-transformation-from-integer-to-float
+# Implement-transformation-from-integer-to-float
 It's assignment 1 of lecture [Computer Architecture](http://wiki.csie.ncku.edu.tw/arch/schedule)
 
 ## About
