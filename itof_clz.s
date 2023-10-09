@@ -1,19 +1,12 @@
-# This example demonstrates how strings, integers, chars and floating point
-# values may be printed to the console
-
 .data
-str:        .string      "A string"
-newline:    .string      "\n"
-delimiter:  .string      ", "
-num:        .dword        0xBBFFFFFFFF, 0x84f2
-mask:        .word        0xFFFFF
-
+num:        .dword        0xBBFFFFFFFF, 0x84f2, 0x811111111
+mask:       .word        0xFFFFF
+maskclz:    .word        0x55555555, 0x33333333, 0x0f0f0f0f
 .text
     la t0, num
     lw a0, 12(t0)
     lw a1, 8(t0)
     jal itof
-    
     jal exit
 
 # ====== subroutines ======
@@ -68,9 +61,10 @@ merged:
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
+    
 clz:
 # input int64[a0, a1]
-# iutput int32[a0]
+# output int32[a0]
 # x |= (x >> {1, 2, 4, 8, 16})
     addi sp, sp, -4
     sw ra, 0(sp)
@@ -91,7 +85,7 @@ Loop1:
 # x |= (x >> 32)
     or a1, a1, a0
 # x -= ((x >> 1) & 0x5555555555555555);
-    la t6, mask    
+    la t6, maskclz    
     srli t0, a0, 1
     lw t5, 0(t6)
     and t0, t0, t5 # t0 = (a0 >> 1) & 0x55555555

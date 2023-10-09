@@ -1,29 +1,13 @@
-# This example demonstrates how strings, integers, chars and floating point
-# values may be printed to the console
-
 .data
-str:        .string      "A string"
-newline:    .string      "\n"
-delimiter:  .string      ", "
-num:        .dword        0xBBFFFFFFFF, 0x84f2
+num:        .dword        0xBBFFFFFFFF, 0x84f2, 0x811111111
 mask:        .word        0xFFFFF
 
 .text
     la t0, num
-    lw a0, 12(t0)
-    lw a1, 8(t0)
-    lw a5, 4(t0)
-    lw a6, 0(t0)
+    lw a0, 4(t0)
+    lw a1, 0(t0)
     
     jal itof
-    
-# -------- Float printing ----------
-# Print an approximation of Pi (3.14159265359)
-#    li a0, 0x40490FDB
-#    li a7, 2
-#    ecall
-
-#    jal printNewline
     jal exit
 
 # ====== Helper routines ======

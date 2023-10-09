@@ -1,74 +1,12 @@
-# This example demonstrates how strings, integers, chars and floating point
-# values may be printed to the console
-
 .data
-str:        .string      "A string"
-newline:    .string      "\n"
-delimiter:  .string      ", "
-num:        .dword        0xBBFFFFFFFF, 0x84f2
-mask:       .word        0xFFFFF
-maskclz:       .word        0x55555555, 0x33333333, 0x0f0f0f0f
+num:        .dword        0xBBFFFFFFFF, 0x84f2, 0x811111111
+maskclz:    .word        0x55555555, 0x33333333, 0x0f0f0f0f
 .text
     la t0, num
-    lw a0, 12(t0)
-    lw a1, 8(t0)
-    jal itof
-    
-    jal exit
-
-# ====== subroutines ======
-# cast int64 to double
-# input uint64[a0, a1] 
-# output double[a0, a1]
-itof:
-    addi sp, sp, -4
-    sw ra, 0(sp)
-    bnez a0, inrange
-    bnez a1, inrange
-    li t0, 1
-    slli t0, t0, 21
-    blt a0, t0, inrange
-# overrange, set msb 1
-    li t0, 1
-    slli t0, t0, 31
-    or a0, a0, t0
-    ret
-inrange:
-    addi sp, sp, -8
-    sw a0, 0(sp)
-    sw a1, 4(sp)
+    lw a0, 4(t0) 
+    lw a1, 0(t0)
     call clz
-    addi a2, a0, -11
-    lw a0, 0(sp)
-    lw a1, 4(sp)
-    addi sp, sp 8
-    li a3, 32
-    bge a2, a3, ge32
-# lt32
-    sub a3, a3, a2
-    sll a0, a0, a2
-    srl t0, a1, a3
-    sll a1, a1, a2
-    or a0, a0, t0
-    j merged
-ge32:
-    sub a3, a2, a3
-    sll a1, a1, a3
-    mv a0, a1
-    li a1, 0
-# exponent = 1023 + 52 - shifts
-merged:
-    li a3, 1075
-    sub a3, a3, a2
-    slli a3, a3, 20
-    la t0, mask
-    lw t0, 0(t0)
-    and a0, a0, t0
-    or a0, a0, a3
-    lw ra, 0(sp)
-    addi sp, sp, 4
-    ret
-    
+    call exit
 clz:
 # input int64[a0, a1]
 # output int32[a0]
