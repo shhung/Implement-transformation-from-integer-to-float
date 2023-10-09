@@ -6,8 +6,8 @@ str:        .string      "A string"
 newline:    .string      "\n"
 delimiter:  .string      ", "
 num:        .dword        0xBBFFFFFFFF, 0x84f2
-mask:       .word        0xFFFFF
-maskclz:       .word        0x55555555, 0x33333333, 0x0f0f0f0f
+mask:        .word        0xFFFFF
+
 .text
     la t0, num
     lw a0, 12(t0)
@@ -68,10 +68,9 @@ merged:
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
-    
 clz:
 # input int64[a0, a1]
-# output int32[a0]
+# iutput int32[a0]
 # x |= (x >> {1, 2, 4, 8, 16})
     addi sp, sp, -4
     sw ra, 0(sp)
@@ -92,7 +91,7 @@ Loop1:
 # x |= (x >> 32)
     or a1, a1, a0
 # x -= ((x >> 1) & 0x5555555555555555);
-    la t6, maskclz    
+    la t6, mask    
     srli t0, a0, 1
     lw t5, 0(t6)
     and t0, t0, t5 # t0 = (a0 >> 1) & 0x55555555
